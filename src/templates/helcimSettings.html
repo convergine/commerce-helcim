@@ -1,0 +1,56 @@
+{% from "_includes/forms" import textField, lightswitchField, autosuggestField %}
+
+{{ lightswitchField({
+label: "Test mode?"|t('commerce-helcim'),
+name: 'testMode',
+on: gateway.testMode,
+errors: gateway.getErrors('testMode'),
+}) }}
+
+
+{{ autosuggestField({
+label: "Hilcim JS Token"|t('commerce-helcim'),
+instructions: "Your Helcim.js Configuration Token"|t('commerce-helcim'),
+id: 'jsToken',
+class: 'ltr',
+name: 'jsToken',
+suggestEnvVars: true,
+value: gateway.jsToken,
+errors: gateway.getErrors('jsToken')
+}) }}
+
+
+{{ autosuggestField({
+label: "Account ID"|t('commerce-helcim'),
+instructions: "Your Helcim Commerce Account Id"|t('commerce-helcim'),
+id: 'accountId',
+class: 'ltr',
+name: 'accountId',
+suggestEnvVars: true,
+value: gateway.accountId,
+errors: gateway.getErrors('accountId')
+}) }}
+
+
+{{ autosuggestField({
+label: "API Token"|t('commerce-helcim'),
+instructions: "Your Helcim Commerce API Token"|t('commerce-helcim'),
+id: 'apiToken',
+class: 'ltr',
+name: 'apiToken',
+suggestEnvVars: true,
+value: gateway.apiToken,
+errors: gateway.getErrors('apiToken')
+}) }}
+
+
+{{ autosuggestField({
+label: "Terminal ID"|t('commerce-helcim'),
+instructions: "Your Commerce Terminal ID"|t('commerce-helcim'),
+id: 'terminalId',
+class: 'ltr',
+name: 'terminalId',
+suggestEnvVars: true,
+value: gateway.terminalId,
+errors: gateway.getErrors('terminalId')
+}) }}

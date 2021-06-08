@@ -1,0 +1,40 @@
+{
+  "name": "convergine/commerce-helcim",
+  "description": "Helcim integration for Craft Commerce 2 & 3",
+  "version": "1.0.0",
+  "type": "craft-plugin",
+  "keywords": [
+    "helcim",
+    "commerce",
+    "craftcms",
+    "yii2"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Convergine",
+      "homepage": "https://convergine.com/"
+    }
+  ],
+  "support": {
+    "email": "support@craftcms.com",
+    "issues": "https://github.com/convergine/commerce-helcim/issues?state=open",
+    "source": "https://github.com/craftcms/commerce-stripe",
+    "docs": "https://github.com/convergine/commerce-helcim/blob/master/README.md",
+    "rss": "https://github.com/convergine/commerce-helcim/commits/master.atom"
+  },
+  "require": {
+    "craftcms/cms": "^3.1.5",
+    "craftcms/commerce": "^2.2.0|^3.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "craft\\commerce\\helcim\\": "src/"
+    }
+  },
+  "extra": {
+    "name": "Helcim for Craft Commerce",
+    "handle": "commerce-helcim",
+    "documentationUrl": "https://github.com/convergine/commerce-helcim/blob/master/README.md"
+  }
+}

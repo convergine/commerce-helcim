@@ -20,21 +20,29 @@ errors: gateway.getErrors('jsToken')
 }) }}
 
 
+
 {{ autosuggestField({
-label: "Account ID"|t('commerce-helcim'),
-instructions: "Your Helcim Commerce Account Id"|t('commerce-helcim'),
-id: 'accountId',
+label: "API Secret"|t('commerce-helcim'),
+instructions: "Your Helcim Secret"|t('commerce-helcim'),
+id: 'apiSecret',
 class: 'ltr',
-name: 'accountId',
+name: 'apiSecret',
 suggestEnvVars: true,
-value: gateway.accountId,
-errors: gateway.getErrors('accountId')
+value: gateway.apiSecret,
+errors: gateway.getErrors('apiSecret')
 }) }}
 
 
+{{ lightswitchField({
+label: "Enable server side protection"|t('commerce-helcim'),
+name: 'enableServersideProtection',
+on: gateway.enableServersideProtection,
+errors: gateway.getErrors('enableServersideProtection'),
+}) }}
+
 {{ autosuggestField({
 label: "API Token"|t('commerce-helcim'),
-instructions: "Your Helcim Commerce API Token"|t('commerce-helcim'),
+instructions: "Your Helcim API Token"|t('commerce-helcim'),
 id: 'apiToken',
 class: 'ltr',
 name: 'apiToken',
@@ -43,14 +51,34 @@ value: gateway.apiToken,
 errors: gateway.getErrors('apiToken')
 }) }}
 
+{{ autosuggestField({
+label: "Account ID"|t('commerce-helcim'),
+instructions: "Your Helcim Account ID"|t('commerce-helcim'),
+id: 'apiAccountId',
+class: 'ltr',
+name: 'apiAccountId',
+suggestEnvVars: true,
+value: gateway.apiAccountId,
+errors: gateway.getErrors('apiAccountId')
+}) }}
+
+
+{{ lightswitchField({
+label: "Hash Amount "|t('commerce-helcim'),
+instructions: "Required if Helcim.js configuration requires hashing protection."|t('commerce-helcim'),
+name: 'hashAmount',
+on: gateway.hashAmount,
+errors: gateway.getErrors('hashAmount'),
+}) }}
 
 {{ autosuggestField({
-label: "Terminal ID"|t('commerce-helcim'),
-instructions: "Your Commerce Terminal ID"|t('commerce-helcim'),
-id: 'terminalId',
+label: "Google reCaptcha site"|t('commerce-helcim'),
+instructions: "This is required if ReCaptcha is enabled in the .JS config."|t('commerce-helcim'),
+id: 'reCaptchaSite',
 class: 'ltr',
-name: 'terminalId',
+name: 'reCaptchaSite',
 suggestEnvVars: true,
-value: gateway.terminalId,
-errors: gateway.getErrors('terminalId')
+value: gateway.reCaptchaSite,
+errors: gateway.getErrors('reCaptchaSite')
 }) }}
+

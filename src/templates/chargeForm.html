@@ -1,0 +1,127 @@
+{% import "_includes/forms" as forms %}
+
+{% if reCaptchaSite is defined %}
+<script type='text/javascript'
+        src="https://www.google.com/recaptcha/api.js?render={{ parseEnv(gateway.reCaptchaSite) }}"></script>
+<script>
+    grecaptcha.ready(function () {
+        grecaptcha.execute('{{ parseEnv(gateway.reCaptchaSite) }}', {action: 'helcimJSCheckout'}).then(function (token) {
+            document.getElementById('g-recaptcha-response').value = token;
+        });
+    });
+</script>
+{% endif %}
+
+<div class="helcim-charge-form">
+    <fieldset class="card-holder">
+        <legend>{{ 'Card Holder'|t('commerce') }}</legend>
+
+        <div class="grid" data-cols="2">
+
+            <!-- Card Holder Name -->
+            <div class="item" data-colspan="1">
+                {{ forms.text({
+                name: 'firstName',
+                id: 'cardHolderName',
+                maxlength: 70,
+                placeholder: "First Name"|t('commerce'),
+                autocomplete: false,
+                class: 'card-holder-first-name'~(paymentForm.getErrors('firstName') ? ' error'),
+                value: paymentForm.firstName,
+                required: true,
+                }) }}
+            </div>
+
+            <div>
+                {{ forms.text({
+                name: 'lastName',
+                maxlength: 70,
+                placeholder: "Last Name"|t('commerce'),
+                autocomplete: false,
+                class: 'card-holder-last-name'~(paymentForm.getErrors('lastName') ? ' error'),
+                value: paymentForm.lastName,
+                required: true,
+                }) }}
+            </div>
+        </div>
+
+        {% set errors = [] %}
+        {% for attributeKey in ['firstName', 'lastName'] %}
+        {% set errors = errors|merge(paymentForm.getErrors(attributeKey)) %}
+        {% endfor %}
+
+        {{ forms.errorList(errors) }}
+        </fieldsets>
+
+        <!-- Card Number -->
+        <fieldset class="card-data">
+            <legend>{{ 'Card'|t('commerce') }}</legend>
+
+            <div>
+                <div>
+                    {{ forms.text({
+                    id: 'cardNumber',
+                    maxlength: 19,
+                    placeholder: "Card Number"|t('commerce'),
+                    autocomplete: false,
+                    class: 'card-number'~(paymentForm.getErrors('number') ? ' error'),
+                    value: paymentForm.number
+                    }) }}
+
+                </div>
+
+                <div>
+                    {{ forms.text({
+                    class: 'card-expiry'~(paymentForm.getErrors('month') or paymentForm.getErrors('year') ? ' error'),
+                    type: 'text',
+                    id: 'cardExpiry',
+                    placeholder: "MM"|t('commerce')~"YY"|t('commerce'),
+                    value: paymentForm.expiry
+                    }) }}
+
+                    {{ forms.text({
+                    type: 'tel',
+                    id: 'cardCVV',
+                    placeholder: "CVV"|t('commerce'),
+                    class: 'card-cvc'~(paymentForm.getErrors('cvv') ? ' error'),
+                    value: paymentForm.cvv
+                    }) }}
+                </div>
+            </div>
+
+            {% set errors = [] %}
+            {% for attributeKey in ['number', 'month', 'year', 'cvv'] %}
+            {% set errors = errors|merge(paymentForm.getErrors(attributeKey)) %}
+            {% endfor %}
+
+            {{ forms.errorList(errors) }}
+
+        </fieldset>
+    <div id="helcimResults" role="alert"></div>
+
+        <input type="hidden" id="token" value="{{ parseEnv(gateway.jsToken) }}">
+        <input type="hidden" id="language" value="en">
+        <input type="hidden" id="cardToken" value="1">
+        <input type="hidden" name="process" value="yes" />
+        <input type="hidden" name="currency" value="{{ currency }}" />
+
+        {% if test %}
+        <input type="hidden" name="test" value="1" />
+        {% endif %}
+
+        <input type="hidden" id="g-recaptcha-response" value="">
+        <input type="hidden" id="amount" value="{{amount}}">
+
+        {% if hashAmount %}
+        <input type="hidden" id="amountHash" value="{{amountHash}}">
+        {% endif %}
+
+        {% if billingAddress is defined %}
+        <div class="helcim-address hidden">
+            <input type="hidden" id="cardHolderAddress" value="{{ billingAddress.address1 }}" />
+            <input type="hidden" id="cardHolderPostalCode" value="{{ billingAddress.zipCode }}" />
+            <input type="hidden" name="cardHolderCity" value="{{ billingAddress.city }}" />
+        </div>
+        {% endif %}
+
+</div>

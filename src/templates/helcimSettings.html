@@ -1,0 +1,87 @@
+{% from "_includes/forms" import textField, lightswitchField, autosuggestField %}
+
+{{ lightswitchField({
+label: "Test mode?"|t('commerce-helcim'),
+name: 'testMode',
+on: gateway.testMode,
+errors: gateway.getErrors('testMode')
+}) }}
+
+
+{{ autosuggestField({
+label: "Helcim JS Token"|t('commerce-helcim'),
+instructions: "Your Helcim.js Configuration Token"|t('commerce-helcim'),
+id: 'jsToken',
+class: 'ltr',
+name: 'jsToken',
+suggestEnvVars: true,
+value: gateway.jsToken,
+errors: gateway.getErrors('jsToken')
+}) }}
+
+
+
+{{ autosuggestField({
+label: "API Secret Key"|t('commerce-helcim'),
+instructions: "Your Helcim Secret Key"|t('commerce-helcim'),
+id: 'apiSecret',
+class: 'ltr',
+name: 'apiSecret',
+suggestEnvVars: true,
+value: gateway.apiSecret,
+errors: gateway.getErrors('apiSecret')
+}) }}
+<h2>Server side</h2>
+
+{{ lightswitchField({
+label: "Enable server side protection, refund and credit card saving"|t('commerce-helcim'),
+name: 'enableServersideProtection',
+on: gateway.enableServersideProtection,
+errors: gateway.getErrors('enableServersideProtection'),
+toggle: 'serverSideCredentials'
+}) }}
+
+<div id="serverSideCredentials">
+
+{{ autosuggestField({
+label: "API Token"|t('commerce-helcim'),
+instructions: "Your Helcim API Token"|t('commerce-helcim'),
+id: 'apiToken',
+class: 'ltr',
+name: 'apiToken',
+suggestEnvVars: true,
+value: gateway.apiToken,
+errors: gateway.getErrors('apiToken')
+}) }}
+
+{{ autosuggestField({
+label: "Account ID"|t('commerce-helcim'),
+instructions: "Your Helcim Account ID"|t('commerce-helcim'),
+id: 'apiAccountId',
+class: 'ltr',
+name: 'apiAccountId',
+suggestEnvVars: true,
+value: gateway.apiAccountId,
+errors: gateway.getErrors('apiAccountId')
+}) }}
+</div>
+
+{{ lightswitchField({
+label: "Hash Amount "|t('commerce-helcim'),
+instructions: "Required if Helcim.js configuration requires hashing protection."|t('commerce-helcim'),
+name: 'hashAmount',
+on: gateway.hashAmount,
+errors: gateway.getErrors('hashAmount'),
+}) }}
+
+{{ autosuggestField({
+label: "Google reCaptcha site"|t('commerce-helcim'),
+instructions: "This is required if ReCaptcha is enabled in the .JS config."|t('commerce-helcim'),
+id: 'reCaptchaSite',
+class: 'ltr',
+name: 'reCaptchaSite',
+suggestEnvVars: true,
+value: gateway.reCaptchaSite,
+errors: gateway.getErrors('reCaptchaSite')
+}) }}
+

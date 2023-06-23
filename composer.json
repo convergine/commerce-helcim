@@ -1,0 +1,40 @@
+{
+  "name": "convergine/commerce-helcim",
+  "description": "Helcim payments for Craft Commerce 4",
+  "version": "1.0.0",
+  "type": "craft-plugin",
+  "keywords": [
+    "helcim",
+    "commerce",
+    "craftcms"
+  ],
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Convergine Corp.",
+      "homepage": "https://convergine.com/"
+    }
+  ],
+  "support": {
+    "issues": "https://github.com/convergine/commerce-helcim/issues?state=open",
+    "source": "https://github.com/convergine/commerce-helcim",
+    "docs": "https://github.com/convergine/commerce-helcim/blob/master/README.md",
+    "support": {
+      "email": "info@convergine.com"
+    }
+  },
+  "require": {
+    "craftcms/cms": "^4.0.0",
+    "craftcms/commerce": "^4.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "craft\\commerce\\helcim\\": "src/"
+    }
+  },
+  "extra": {
+    "name": "Helcim for Craft Commerce",
+    "handle": "commerce-helcim",
+    "changelogUrl": "https://github.com/convergine/commerce-helcim/blob/master/CHANGELOG.md"
+  }
+}

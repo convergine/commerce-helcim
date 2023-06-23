@@ -1,0 +1,187 @@
+{% import "_includes/forms" as forms %}
+
+{% if reCaptchaSite is defined %}
+<script type='text/javascript'
+        src="https://www.google.com/recaptcha/api.js?render={{ parseEnv(gateway.reCaptchaSite) }}"></script>
+<script>
+    function sendHelcimForm(){
+        grecaptcha.execute('{{ parseEnv(gateway.reCaptchaSite) }}', {action: 'helcimJSCheckout'}).then(function (token) {
+            if(document.getElementById('paymentForm-helcim-g-recaptcha-response')!= null){
+                document.getElementById('paymentForm-helcim-g-recaptcha-response').value = token;
+            }else{
+                document.getElementById('g-recaptcha-response').value = token;
+            }
+
+            helcimProcess();
+        });
+    }
+</script>
+{% else %}
+    <script>
+        function sendHelcimForm(){
+            helcimProcess();
+        }
+    </script>
+{% endif %}
+
+<div class="helcim-charge-form" id="helcim-charge-form">
+    <fieldset class="card-holder">
+        <legend>{{ 'Card Holder'|t('commerce') }}</legend>
+
+        <div class="grid" data-cols="2">
+
+            <!-- Card Holder Name -->
+            <div class="item" data-colspan="1">
+                {{ forms.text({
+                name: 'firstName',
+                id: 'cardHolderName',
+                maxlength: 70,
+                placeholder: "First Name"|t('commerce'),
+                autocomplete: false,
+                class: 'card-holder-first-name'~(paymentForm.getErrors('firstName') ? ' error'),
+                value: paymentForm.firstName,
+                required: true,
+                }) }}
+            </div>
+
+            <div class="item" data-colspan="1" >
+                {{ forms.text({
+                name: 'lastName',
+                id: 'cardHolderLastName',
+                maxlength: 70,
+                placeholder: "Last Name"|t('commerce'),
+                autocomplete: false,
+                class: 'card-holder-last-name'~(paymentForm.getErrors('lastName') ? ' error'),
+                value: paymentForm.lastName,
+                required: true,
+                }) }}
+            </div>
+        </div>
+
+        {% set errors = [] %}
+        {% for attributeKey in ['firstName', 'lastName'] %}
+        {% set errors = errors|merge(paymentForm.getErrors(attributeKey)) %}
+        {% endfor %}
+
+        {{ forms.errorList(errors) }}
+
+
+        <!-- Card Number -->
+        <fieldset class="card-data">
+            <legend>{{ 'Card'|t('commerce') }}</legend>
+
+            <div>
+                <div class="card-number-input">
+                    <img src="{{asset_url}}/ico_amex.jpg" data-id="amex">
+                    <img src="{{asset_url}}/ico_disc.jpg" data-id="disc">
+                    <img src="{{asset_url}}/ico_mc.jpg" data-id="mc">
+                    <img src="{{asset_url}}/ico_visa.jpg" data-id="visa">
+                    <img src="{{asset_url}}/ico_card.jpg" data-id="card" style="display:inline-block;">
+
+                    {{ forms.text({
+                    id: 'cardNumber',
+                    maxlength: 19,
+                    placeholder: "Card Number"|t('commerce'),
+                    autocomplete: false,
+                    class: 'card-number'~(paymentForm.getErrors('number') ? ' error'),
+                    value: paymentForm.number
+                    }) }}
+
+                </div>
+
+                <div style="display:flex;">
+                    {{ forms.text({
+                    class: 'card-expiry'~(paymentForm.getErrors('month') or paymentForm.getErrors('year') ? ' error'),
+                    type: 'text',
+                    id: 'cardExpiry',
+                    placeholder: "MM"|t('commerce')~"YY"|t('commerce'),
+                    value: paymentForm.expiry
+                    }) }}
+
+                    {{ forms.text({
+                    type: 'tel',
+                    id: 'cardCVV',
+                    placeholder: "CVV"|t('commerce'),
+                    class: 'card-cvc'~(paymentForm.getErrors('cvv') ? ' error'),
+                    value: paymentForm.cvv
+                    }) }}
+                </div>
+            </div>
+
+            {% set errors = [] %}
+            {% for attributeKey in ['number', 'month', 'year', 'cvv'] %}
+            {% set errors = errors|merge(paymentForm.getErrors(attributeKey)) %}
+            {% endfor %}
+
+            {{ forms.errorList(errors) }}
+
+        </fieldset>
+    </fieldset>
+    <div id="helcimResults" class="helcim-cont" role="alert"></div>
+
+        <input type="hidden" id="helcimToken" value="{{ parseEnv(gateway.jsToken) }}">
+        <input type="hidden" id="language" value="en">
+        <input type="hidden" id="cardToken" value="">
+        <input type="hidden" name="process" value="yes" />
+        <input type="hidden" id="currency" value="{{ currency }}" />
+        <input type="hidden" id="g-recaptcha-response" value="">
+        {% if billingAddress is defined %}
+        <input type="hidden" id="cardHolderAddress" value="{{ billingAddress.addressLine1 }}" />
+        <input type="hidden" id="cardHolderPostalCode" value="{{ billingAddress.postalCode }}" />
+        <input type="hidden" id="cardHolderCity" value="{{ billingAddress.locality }}" />
+        {% endif %}
+        {% if test %}
+        <input type="hidden" id="helcimTest" value="1" />
+        {% endif %}
+        {% if customerID %}
+        <input type="hidden" id="customerCode" value="{{customerID}}" />
+        {% endif %}
+
+
+        <input type="hidden" id="amount" value="{{amount}}">
+        <input type="hidden" id="amountTax" value="{{tax}}">
+        <input type="hidden" id="amountShipping" value="{{shipping}}">
+        <input type="hidden" id="amountDiscount" value="{{discount}}">
+        <input type="hidden" id="orderNumber" value="{{orderID}}">
+
+        {% if hashAmount %}
+        <input type="hidden" id="amountHash" value="{{amountHash}}">
+        {% endif %}
+
+    <div class="helcim-address hidden">
+        {% if billingAddress is defined %}
+
+
+
+            <input type="hidden" id="billing_contactName" value="{{ billingAddress.fullName }}" />
+            <input type="hidden" id="billing_street1" value="{{ billingAddress.addressLine1 }}" />
+            <input type="hidden" id="billing_street2" value="{{ billingAddress.addressLine2 }}" />
+            <input type="hidden" id="billing_city" value="{{ billingAddress.locality }}" />
+            <input type="hidden" id="billing_postalCode" value="{{ billingAddress.postalCode }}" />
+            <input type="hidden" id="billing_businessName" value="{{billingAddress.organization }}" />
+            <input type="hidden" id="billing_email" value="{{customerEmail}}" />
+
+
+        {% endif %}
+        {% if shippingAddress is defined %}
+            <input type="hidden" id="shipping_contactName" value="{{ shippingAddress.fullName }}" />
+            <input type="hidden" id="shipping_street1" value="{{ shippingAddress.addressLine1 }}" />
+            <input type="hidden" id="shipping_street2" value="{{ shippingAddress.addressLine2 }}" />
+            <input type="hidden" id="shipping_city" value="{{ shippingAddress.locality }}" />
+            <input type="hidden" id="shipping_postalCode" value="{{ shippingAddress.postalCode }}" />
+            <input type="hidden" id="shipping_businessName" value="{{shippingAddress.organization }}" />
+        {%endif%}
+        {% if items is defined %}
+            {% for line in items %}
+
+                <input type="hidden" id="itemSKU{{loop.index}}" value="{{ line.sku }}" />
+                <input type="hidden" id="itemDescription{{loop.index}}" value="{{ line.title }}" />
+                <input type="hidden" id="itemQuantity{{loop.index}}" value="{{ line.qty }}" />
+                <input type="hidden" id="itemPrice{{loop.index}}" value="{{ line.price }}" />
+                <input type="hidden" id="itemTotal{{loop.index}}" value="{{ line.total }}" />
+            {% endfor %}
+        {% endif %}
+
+    </div>
+
+</div>
